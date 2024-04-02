@@ -1,0 +1,308 @@
+[
+  {
+    "type": "select",
+    "question": "Qual a cor preferida dele?",
+    "items": [
+      {
+        "icon": "🔵",
+        "text": "Azul",
+        "display": "Me lembra muito o mar.",
+        "porcentage": 0.7
+      },
+      {
+        "icon": "🟢",
+        "text": "Verde",
+        "display": "Rapaz, o maximo que ele ver é a natureza.",
+        "porcentage": 0.2
+      },
+      {
+        "icon": "🟡",
+        "text": "Amarelo",
+        "display": "Nunca nem passou pela cabeça.",
+        "porcentage": 0
+      },
+      {
+        "icon": "🟣",
+        "text": "Roxo",
+        "display": "Agora aqui sim! Lhe faz lembrar do céu à noite, e de algumas coisas que ele gosta.",
+        "porcentage": 1
+      },
+      {
+        "icon": "⚫",
+        "text": "Preto",
+        "display": "Para combinar com o estilo de solidão.",
+        "porcentage": 0.7
+      },
+      {
+        "icon": "🔴",
+        "text": "Vermeho",
+        "dispay": "Uma corzinha de vez em quando não faz mal a ninguém.",
+        "porcentage": 0.8
+      },
+      {
+        "icon": "⚪",
+        "text": "Branco",
+        "display": "A cor da paz, mas não é a preferida dele.",
+        "porcentage": 0.3
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "question": "Qual dessas besteiras ele possui mais vontade de comer?",
+    "items": [
+      {
+        "icon": "🍕",
+        "text": "Pizza"
+      },
+      {
+        "icon": "🍔",
+        "text": "Hamburguer"
+      },
+      {
+        "icon": "🍨",
+        "text": "Açai"
+      },
+      {
+        "icon": "🍟",
+        "text": "Batata Frita"
+      }
+    ],
+    "answer": 0
+  },
+  {
+    "type": "selectNear",
+    "question": "Qual o suco preferido?",
+    "items": [
+      {
+        "icon": "🍊",
+        "text": "Laranja",
+        "porcentage": 0.1,
+        "display": "Rapaz, complicado, principalmente quando ele ver alguém pedindo na comanda."
+      },
+      {
+        "icon": "🍎",
+        "text": "Acelora",
+        "porcentage": 0.3,
+        "display": "Ele até gosta, mas não é o preferido"
+      },
+      {
+        "icon": "",
+        "text": "Caju",
+        "porcentage": 0.7,
+        "display": "Opa, quase lá, mas ele não nega um suco de caju não viu?"
+      },
+      {
+        "icon": "🍍",
+        "text": "Goiaba",
+        "porcentage": 1,
+        "display": "Correto! Ele adora suco de goiaba! (Principalmente ao leite)"
+      }
+    ]
+  },
+  {
+    "type": "selectNear",
+    "question": "Qual desses doces ele prefere?",
+    "items": [
+      {
+        "icon": "🍫",
+        "text": "Chocolate",
+        "porcentage": 0.1,
+        "display": "Ele come em abundancia, porém... nhe."
+      },
+      {
+        "icon": "🍬",
+        "text": "Bala",
+        "porcentage": 0.3,
+        "display": "Aqui indicativo que a ansiedade ta batendo, corra se possível."
+      },
+      {
+        "icon": "🍭",
+        "text": "Pirulito",
+        "porcentage": 0.7,
+        "display": "Ele chupa até as bolas se deixar."
+      },
+      {
+        "icon": "🍦",
+        "text": "Doce de Leite",
+        "porcentage": 1,
+        "display": "Correto! Um docinho no final da tarde sempre cai bem."
+      }
+    ]
+  },
+  {
+    "question": "Qual dessas ações ele mais gosta de fazer?",
+    "items": [
+      {
+        "icon": "🎥",
+        "text": "Ir ao Shopping",
+        "display": "Ele já trabalha lá, o trauma ta garantido 🤡",
+        "porcentage": 0.1
+      },
+      {
+        "icon": "🎮",
+        "text": "Ficar Casa",
+        "display": "Apesar de ficar a maior parte, ele prefere rolês mais agitados",
+        "porcentage": 0.3
+      },
+      {
+        "icon": "🚶🏼‍♂️",
+        "text": "Fazer Trilha",
+        "display": "Apesar de não fazer trilha, ele gosta muito de caminhar e ficar proximo a natureza.",
+        "porcentage": 1
+      },
+      {
+        "icon": "💃🏼",
+        "text": "Jogar Just Dance",
+        "display": "Ele até gosta, provavelmente sabe 90% das coreografias, mas não é pra tanto.",
+        "porcentage": 0.5
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "question": "Qual desses generos de musicais ele mais gosta?",
+    "answer": 1,
+    "items": [
+      {
+        "icon": "🎹",
+        "text": "Classica",
+        "display": "Talvez no futuro quando virar o tio gay rico, mas por enquanto não.",
+        "porcenta": 0
+      },
+      {
+        "icon": "🎵",
+        "text": "Pop",
+        "display": "Correto! Ele adora pop e gosta muito de .",
+        "porcentage": 1
+      },
+      {
+        "icon": "🎸",
+        "text": "Rock",
+        "display": "Passou longe, raramente ele gosta (Com exceção de algumas bandas)",
+        "porcentage": 0.3
+      },
+      {
+        "icon": "🎧",
+        "text": "Eletronica",
+        "display": "Ele ouve muito, mas ultimamente não tem muitas boas",
+        "porcentage": 0.5
+      },
+      {
+        "icon": "🎶",
+        "text": "Funk",
+        "display": "Rapaz, é complicado o gosto dele, não o questione",
+        "porcentage": 0.8
+      }
+    ]
+  },
+  {
+    "type": "selectNear",
+    "question": "Se fosse para ele faltar ou pular um treino na academia, qual seria?",
+    "answer": 0,
+    "items": [
+      {
+        "icon": "🦵",
+        "text": "Pernas",
+        "display": [
+          "Rapaz, ama treino de pernas, prefere até mais que o de peito.",
+          "Ele gosta de treinar pernas, o ruim é quando vai sentar no vaso no dia seguinte.",
+          "Complicado ele faltar no dia preferido dele."
+        ],
+        "porcentage": 0.0
+      },
+      {
+        "icon": "🏋🏼‍♂️",
+        "text": "Costas",
+        "display": "Até faz 'direito', mas não é o preferido dele.",
+        "porcentage": 0.5
+      },
+      {
+        "icon": "",
+        "text": "Biceps/Triceps",
+        "display": "Correto, são os ultimos que ele faz e tem dificuldade, por isso ele pula com desculpas de que vai fechar a academia 🤡.",
+        "porcentage": 1
+      },
+      {
+        "icon": "",
+        "text": "Peitos",
+        "display": "O intuito é ficar peitudah né?",
+        "porcentage": 0.3
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "question": "Qual desses animais ele mais gosta e já teve?",
+    "answer": 0,
+    "items": [
+      {
+        "icon": "🐱",
+        "text": "Gato",
+        "display": "Se ele tivesse mais tempo seria teria varios em casa."
+      },
+      {
+        "icon": "🐶",
+        "text": "Cachorro",
+        "display": "Nunca teve, ele acha fofo, mas se deixar ele passa longe"
+      },
+      {
+        "icon": "🐰",
+        "text": "Coelho",
+        "display": "Um parente já teve, parece um inferno esse animal."
+      },
+      {
+        "icon": "🐍",
+        "text": "Cobra",
+        "display": "Pleno 2024 e tem alguém que cria isso?"
+      }
+    ]
+  },
+  {
+    "question": "O que ele gosta de fazer?",
+    "items": [
+      {
+        "icon": "🎮",
+        "text": "Jogar",
+        "display": "Ele gosta de jogar, mas não é o que ele mais gosta.",
+        "porcentage": 0.3
+      },
+      {
+        "icon": "📚",
+        "text": "Ler",
+        "display": "Ele já teve algo no inicio da adolescencia, mas acabou por lá mesmo",
+        "porcentage": 0.5
+      },
+      {
+        "icon": "🎧",
+        "text": "Ouvir Musica",
+        "display": "Isso ele ama fazer, sem sombra de duvidas!",
+        "porcentage": 0.7
+      },
+      {
+        "icon": "🎥",
+        "text": "Assistir Series/Filmes",
+        "display": "Ele curte, mas é muito desconexo da propria realidade.",
+        "porcentage": 0.1
+      },
+      {
+        "icon": "🎤",
+        "text": "Cantar",
+        "display": "Ele canta muito bem, mas não é o que ele mais gosta de fazer.",
+        "porcentage": 0.3
+      },
+      {
+        "icon": "🎨",
+        "text": "Desenhar",
+        "display": "Se ele tivesse desenvolvido isso, com certeza não estaria fazendo o que faz hoje.",
+        "porcentage": 0
+      },
+      {
+        "icon": "👜💄",
+        "text": "Rodar a Bolsa",
+        "display": "Ei, ele faz programa, mas né essas coisas não.",
+        "porcentage": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="header">
+    <h1>Você Conhece?</h1>
+    <span id="name">Daltinho</span>
+  </div>
+  <div class="container glass-effect">
+    <div class="page welcome-page">
+      <div>
+        Então, você quer jogar um quiz?
+        Sabe mesmo sobre o Daltinho?
+      </div>
+
+      <span>Opa, eae, bora começar?</span>
+
+      <div class="actions">
+        <button class="btn-yes" disabled>Sim</button>
+        <button class="btn-no" disabled>Não</button>
+      </div>
+    </div>
+    <div class="page question-page" style="display: none;">
+      <div class="question">
+        <span>Qual o nome do Daltinho?</span>
+      </div>
+      <div class="options">
+        <button disabled>Carlos</button>
+        <button class="active">Daltinho</button>
+        <button class="progress-bg">João</button>
+        <button>
+          <div class="progress-bg"></div>
+          <span>Lucas</span>
+        </button>
+      </div>
+      <div class="actions">
+        <button class="btn-skip no-sound">Pular (2x)</button>
+        <button class="btn-next" disabled>Próximo</button>
+      </div>
+    </div>
+    <div class="page end-page" style="display: none;">
+      <div class="results">
+        <span>Parabéns, você concluiu o quiz!</span>
+        <span>Seu resultado foi de <strong class="porcentage">75%</strong></span>
+      </div>
+      <div class="ranking">
+        <span>Você está entre os <strong class="ranking">2%</strong> que conseguiram acertar o Quiz!</span>
+      </div>
+      <div class="stats">
+        <span>Erros: <strong class="errors">0</strong></span>
+        <span>Acertos: <strong class="hits">0</strong></span>
+        <span>Pulos: <strong class="skips">0</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="easter-egg" style="display: none">
+    <img
+      src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2Q5OWNucWFuMHg5ZW45d3p6dzZmMmIxejY1b2p5ZTh5aTRydnhtNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/1qWlkOaMFHQGOfKQVn/giphy.gif"
+      alt="Daltinho" />
+  </div>
+
+  <div class="hud-actions">
+    <a class="btn ghost" href="https://github.com/JDaltonLins">
+      <img class="social icon" src="https://img.icons8.com/ios-filled/50/000000/github.png" />
+      Github
+    </a>
+    <button class="btn-reset">Resetar</button>
+  </div>
+</body>
+
+<script>
+  (() => {
+
+    const soundUrls = {
+      click: 'https://www.myinstants.com/media/sounds/click.mp3',
+      success: 'https://www.myinstants.com/media/sounds/cat.mp3',
+      error: 'https://www.myinstants.com/media/sounds/errou-faustao.mp3',
+      easterEgg: 'https://www.myinstants.com/media/sounds/ack.mp3',
+      skip: 'https://www.myinstants.com/media/sounds/mario-jump.mp3',
+      correct: 'https://www.myinstants.com/media/sounds/mario-1-up.mp3',
+      middle: 'https://www.myinstants.com/media/sounds/super-mario-coin-sound.mp3',
+      death: 'https://www.myinstants.com/media/sounds/fnaf-3-scream-sound.mp3',
+      creepy: 'https://www.myinstants.com/media/sounds/nightmare-jumpscare.mp3'
+    };
+
+    const soundEffects = Object.keys(soundUrls).reduce((acc, key) => {
+      acc[key] = new Audio(soundUrls[key]);
+      acc[key].load();
+      return acc;
+    }, {});
+
+    function awaitAudioLoad(audio) {
+      return new Promise((resolve, reject) => {
+        audio.oncanplaythrough = resolve;
+        audio.onerror = reject;
+        audio.play();
+        if (audio.readyState > 3) resolve();
+      });
+    }
+
+    function effectHackChange({
+      el,
+      text,
+      preText,
+      onEnd
+    }) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|:"<>?-=[]\;\'.\/';
+      const randomizedText = preText ?? text.split('').map(char => {
+        if (char === ' ') return ' ';
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
+      const endAt = randomizedText.length > text.length ? randomizedText.length : text.length;
+      // Ele irá informar quantos caracteres ele irá mostrar e quantos serão mudados, com a mudança do penultimo pós para um aleatorio
+      const newText = (showSequence) => {
+        return text.slice(0, showSequence) +
+          (endAt != endAt
+            ? chars[Math.floor(Math.random() * chars.length)]
+            : ''
+          ) + randomizedText.slice(showSequence + 1);
+      }
+
+      let showSequence = 0, tick = 0;
+
+      const update = () => {
+        requestAnimationFrame(() => {
+          el.innerText = newText(showSequence);
+
+          if (tick++ % 1 == 0)
+            showSequence++;
+
+          if (showSequence < endAt + 1) {
+            setTimeout(update, 50);
+          } else {
+            onEnd?.();
+          }
+        });
+      }
+
+      update();
+    }
+
+    function setButtonProgress({
+      el,
+      progress,
+      color
+    }) {
+      let inner = el.querySelector('.progress-bg');
+      if (!inner) {
+        inner = document.createElement('div');
+        inner.classList.add('progress-bg');
+        el.insertBefore(inner, el.firstChild);
+      }
+      inner.style.width = `${progress}%`;
+      if (color)
+        inner.style.setProperty('--color', color);
+    }
+
+    const name = document.querySelector('#name')
+    let first = true;
+
+    function doDatinho() {
+      effectHackChange({
+        el: name,
+        text: 'Daltinho',
+        preText: !first ? 'Bruxo Galático' : null,
+        onEnd: () => setTimeout(doBruxoGalatico, 2000)
+      });
+      first = false;
+    }
+
+    function doBruxoGalatico() {
+      effectHackChange({
+        el: name,
+        text: 'Bruxo Galático',
+        preText: 'Daltinho',
+        onEnd: () => setTimeout(doDatinho, 2000)
+      })
+    }
+
+    doDatinho();
+
+    let clicks = 0;
+    name.onclick = async () => {
+      if (++clicks % 10 != 0) {
+        soundEffects.click.play();
+        // Up pitch scale with clicks
+        soundEffects.click.playbackRate = 1 + (clicks % 10) / 10;
+        name.style.setProperty('--scale', 1 + (clicks % 10) / 100);
+        return;
+      }
+      const
+        easterEgg = document.querySelector('.easter-egg'),
+        easterEggImg = easterEgg.querySelector('img'),
+        show = easterEgg.style.display === 'none';
+
+      if (show)
+        await awaitAudioLoad(soundEffects.easterEgg);
+      easterEgg.style.display = show ? 'block' : 'none';
+
+      name.style.setProperty('--scale', 1);
+      if (show) {
+        let opacity = 1;
+        let opacityStep = soundEffects.easterEgg.duration / 500;
+        let transformStep = 3, transformX = 0;
+        let tick = 0;
+        let lastTick = performance.now();
+
+        const update = () => {
+          requestAnimationFrame(() => {
+            let now = performance.now();
+            let delta = (now - lastTick) / 16.333; // 1000 / 60 = 16.333
+
+            opacity -= opacityStep * delta;
+            transformX += transformStep * delta;
+
+            easterEggImg.style.opacity = opacity;
+            easterEggImg.style.setProperty('--transform-x', `${transformX - 100}px`);
+
+            if (opacity == 0 || opacity <= opacityStep) {
+              easterEgg.style.display = 'none';
+              easterEggImg.style.opacity = 1;
+              easterEggImg.style.removeProperty('--transform-x');
+              return;
+            }
+
+            lastTick = now;
+
+            update();
+          });
+        }
+
+        update();
+      }
+
+    }
+
+    document.onclick = (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        // caso contenha a classe no-sound, não tocar som
+        if (e.target.classList.contains('no-sound')) return;
+        soundEffects.click.play();
+      }
+    }
+
+    Audio.prototype.play = (function (play) {
+      return function () {
+        // Caso esteja tocando, resetar e tocar novamente
+        this.currentTime = 0;
+        return play.call(this);
+      }
+    })(Audio.prototype.play);
+
+    const welcomePage = document.querySelector('.welcome-page'),
+      btnYes = welcomePage.querySelector('.btn-yes'),
+      btnNo = welcomePage.querySelector('.btn-no');
+
+    function onQuests(quests) {
+      let state = JSON.parse(localStorage.getItem('state')) ?? {
+        skips: 2,
+        skiped: 0,
+        errors: 0,
+        hits: 0,
+        halfs: 0,
+        porcentage: 0,
+        currentQuest: 0,
+        consecutiveErrors: 0
+      };
+      let answered = false;
+
+      if (state.currentQuest >= quests.length) {
+        endGame();
+      } else {
+        btnYes.innerText = (state.currentQuest > 0) ? 'Continuar' : 'Sim';
+      }
+
+      const
+        page = document.querySelector('.question-page'),
+        btnSkip = page.querySelector('.btn-skip'),
+        btnNext = page.querySelector('.btn-next'),
+        btnRest = document.querySelector('.btn-reset'),
+        containerOptions = page.querySelector('.options'),
+        containerQuestion = page.querySelector('.question');
+
+      btnRest.onclick = () => {
+        if (confirm('Deseja realmente desistir?')) {
+          localStorage.removeItem('state');
+          location.reload();
+        }
+      }
+      btnSkip.onclick = skip;
+      btnNext.onclick = () => setQuest(state.currentQuest + 1);
+      containerOptions.onclick = selectOption;
+
+      // Retorna cores pasteis com base na porcentagem informada
+      function matchColor(porcetage) {
+        // Tom vermelho pastel
+        if (porcetage < 25) return '#FFCDD2';
+        // Tom amarelo pastel
+        if (porcetage < 50) return '#FFF9C4';
+        // Tom verde pastel
+        if (porcetage < 75) return '#C8E6C9';
+        // Tom azul pastel
+        return '#BBDEFB';
+      }
+
+      function switchPage(pageQuery) {
+        const page = document.querySelector(pageQuery);
+        document.querySelectorAll('.page').forEach(el => el.style.display = 'none');
+        page.style.display = null;
+      }
+
+      function skip() {
+        if (state.skips <= 0) return;
+        if (state.currentQuest + 1 >= quests.length) return endGame();
+
+        soundEffects.skip.play();
+        setQuest(state.currentQuest + 1, { skips: state.skips - 1, skiped: state.skiped + 1 });
+      }
+
+      function defineState(extraState) {
+        Object.assign(state, extraState);
+        localStorage.setItem('state', JSON.stringify(state));
+      }
+
+      function setQuest(index, extra = {}) {
+        defineState({ currentQuest: index, ...extra });
+        answered = false;
+        if (index >= quests.length) return endGame();
+        buildQuest(quests[index]);
+      }
+
+      function selectOption(e) {
+        if (answered) return;
+        if (e.target.tagName !== 'BUTTON') {
+          const closest = e.target.closest('button');
+          if (closest) selectOption({ target: closest });
+          return;
+        }
+        answered = true;
+        const quest = quests[state.currentQuest];
+        const
+          options = Array.from(containerOptions.children),
+          optionIndex = options.indexOf(e.target),
+          option = quest.items[optionIndex];
+
+        const hasPorcentage = quest.items.some(item => item.porcentage);
+
+        for (var i in options) {
+          var optionItem = options[i], questItem = quest.items[i];
+          let currentPorcentage = hasPorcentage ? (questItem.porcentage ?? 0) * 100 : i == quest.answer ? 100 : 0;
+
+          if (i == optionIndex) {
+            if (currentPorcentage === 100) {
+              soundEffects.correct.play();
+              optionItem.classList.add('correct');
+              defineState({ consecutiveErrors: 0, hits: state.hits + 1 });
+            } else {
+              (currentPorcentage > 50 ? soundEffects.middle : soundEffects.error).play();
+              optionItem.classList.add('error');
+              defineState({
+                errors: state.errors + 1,
+                consecutiveErrors: state.consecutiveErrors + 1,
+                halfs: state.halfs + (currentPorcentage > 50 ? 1 : 0),
+              });
+            }
+            defineState({ porcentage: state.porcentage + currentPorcentage });
+            if (Number.isNaN(currentPorcentage)) {
+              debugger;
+            }
+          }
+
+          setButtonProgress({
+            el: optionItem,
+            progress: currentPorcentage,
+            color: matchColor(currentPorcentage)
+          });
+
+          if (questItem.display) {
+            const content = optionItem.querySelector('div.text');
+            var el = content.appendChild(document.createElement('span'));
+            el.innerText = questItem.display;
+            el.classList.add('display');
+          }
+        }
+
+        btnNext.disabled = false;
+
+        if (state.consecutiveErrors == 3 || state.consecutiveErrors == 8) {
+          const blackoutMode = state.consecutiveErrors == 8;
+          // Jumpscare FNAF
+          const jumpscareContainer = document.body.appendChild(document.createElement('div'));
+          jumpscareContainer.classList.add('jumpscare');
+          let source;
+          if (blackoutMode) {
+            document.body.style.filter = 'invert(1), gray(1)';
+            source = 'Nightmarejumpscare.webp';
+          } else {
+            source = 'download.gif';
+          }
+
+
+          const sound = blackoutMode ? soundEffects.creepy : soundEffects.death;
+          //sound.volume = 0;
+          let img = jumpscareContainer.appendChild(document.createElement('img'));
+          let firstLoad = true;
+          img.onload = () => {
+            sound.play();
+            //sound.volume = 1;
+            firstLoad = false;
+            jumpscareContainer.style.display = 'block';
+          }
+          img.src = source
+
+          sound.addEventListener('ended', () => {
+            if (firstLoad) return;
+            jumpscareContainer.remove();
+            if (blackoutMode) {
+              document.body.style.filter = '';
+              page.style.filter = '';
+            }
+          });
+        }
+      }
+
+      function buildQuest(quest) {
+        containerQuestion.innerText = quest.question;
+        // Limpar as opções
+        containerOptions.innerHTML = '';
+
+        for (var option of quest.items) {
+          const el = document.createElement('button');
+          el.classList.add('no-sound');
+          let elIcon = el.appendChild(document.createElement('span'));
+          elIcon.innerText = option.icon;
+          elIcon.classList.add('icon');
+          let elText = el.appendChild(document.createElement('div'));
+          elText.appendChild(document.createElement('span')).innerText = option.text;
+          elText.classList.add('text');
+          containerOptions.appendChild(el);
+        }
+
+        if (state.currentQuest + 1 >= quests.length) {
+          btnNext.innerText = 'Finalizar';
+        } else {
+          btnNext.innerText = 'Próximo';
+        }
+
+        btnNext.disabled = true;
+
+        if (state.skips <= 0) {
+          btnSkip.disabled = true;
+          btnSkip.innerText = 'Sem pulos';
+        } else {
+          btnSkip.disabled = false;
+          btnSkip.innerText = `Pular (${state.skips}x)`;
+        }
+      }
+
+
+
+      function endGame() {
+        const
+          page = document.querySelector('.end-page'),
+          porcentage = page.querySelector('.porcentage'),
+          ranking = page.querySelector('.ranking'),
+          errors = page.querySelector('.errors'),
+          hits = page.querySelector('.hits'),
+          skips = page.querySelector('.skips');
+
+        skips.innerText = state.skiped;
+        errors.innerText = state.errors;
+        hits.innerText = state.hits;
+        porcentage.innerText = `${(state.porcentage / quests.length).toFixed(2)}%`;
+
+        switchPage('.end-page');
+      }
+
+      function startGame() {
+        switchPage('.question-page');
+      }
+
+      function closeGame() {
+        window.close();
+      }
+
+      btnYes.onclick = startGame;
+      btnNo.onclick = closeGame;
+
+      buildQuest(quests[state.currentQuest]);
+    }
+
+    let firstClick = true;
+    document.body.onclick = () => {
+      if (!firstClick) return;
+      document.documentElement.requestFullscreen();
+      firstClick = false;
+    }
+
+    fetch('perguntas.json')
+      .then(res => res.json())
+      .then(quests => {
+        btnYes.disabled = false;
+        btnNo.disabled = false;
+        onQuests(quests);
+      })
+      .catch(console.error);
+  })();
+</script>
+
+</html>
